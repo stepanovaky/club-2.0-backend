@@ -174,7 +174,10 @@ const database = {
         eventName: data.eventName,
         startDate: data.startDate,
       });
-  },
+  },   
+
+  
+
   async getEvents() {
     const eventList = [];
     const res = await eventsRef.get();
@@ -208,13 +211,6 @@ const database = {
         });
       });
 
-    // console.log(doc);
-
-    // .set({
-    //   sanctionedPrice: data.sanctionedPrice,
-    //   unsanctionedPrice: data.unsanctionedPrice,
-    //   eventPdfUrl: data.eventPdfUrl,
-    // });
   },
   async getOneEvent(id) {
     const snapshot = await eventsRef.where("eventId", "==", id).get();
@@ -224,6 +220,18 @@ const database = {
     });
     return event;
   },
+
+  async isEventRegistered(eventId, type, dogs) {
+    const querySnapshot = await eventsRef.doc(eventId).collection(type).get()
+    const registeredDogs = []
+
+    querySnapshot.forEach((doc) => {
+      registeredDogs.push(doc.data())
+    })
+
+    return registeredDogs
+  },
+
   async addSanctionedRegistrationToEvent(id, dogs) {
     dogs.map((dog) => {
       eventsRef.doc(id).collection("sanctioned").doc(dog.callName).set({

@@ -56,6 +56,20 @@ eventsRouter
     await EventsService.addEvent(req.body);
   });
 
+  eventsRouter
+  .route('/api/check/event')
+  .get( async (req, res, next) => {
+    console.log(req.headers['data'])
+    const parsedData = JSON.parse(req.headers['data'])
+    console.log(parsedData);
+    const response = await EventsService.checkEventRegistration(parsedData.eventId, parsedData)
+    if (response) {
+      res.status(409).json({response})
+    } else {
+      res.status(204)
+    }
+  })
+
 ownerRouter.route("/api/find/owner").get(async (req, res, next) => {
   const ownerToFind = req.headers["data"];
   const parsedOwner = JSON.parse(ownerToFind);

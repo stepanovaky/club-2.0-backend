@@ -26,7 +26,7 @@ const FirstTimeRegistrationService = {
     // );
     database.addOwner(owner, dogs);
     database.addDog(owner, dogs);
-    database.logEvent(owner, dogs, "registration");
+    database.logEvent(owner, dogs, "Club Sanction registration");
     EmailService.firstRegistration(owner, dogs);
   },
 };

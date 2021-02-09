@@ -15,6 +15,42 @@ const EventsService = {
 
     const res = await database.updateEvents(serializedData);
   },
+
+  async checkEventRegistration(eventId, data) {
+    
+    const event = await database.getOneEvent(eventId)
+    if (data.sanctioned) {
+      const info = await database.isEventRegistered(event[0], 'sanctioned', data.sanctioned)
+      const toBeRegistered = data.sanctioned
+      console.log(info);
+      const previouslyRegistered = []
+      for (dog of info) {
+        for (item of toBeRegistered) {
+          if (item.callName === dog.dog.callName) {
+          previouslyRegistered.push(item)
+        }
+        }
+      }
+      return previouslyRegistered
+    } else if (data.unsanctioned) {
+      const info = database.isEventRegistered(event[0],
+      'unsanctioned', data.unsanctioned)
+       const toBeRegistered = data.unsanctioned
+      console.log(info);
+      const previouslyRegistered = []
+      for (dog of info) {
+        for (item of toBeRegistered) {
+          if (item.callName === dog.dog.callName) {
+          previouslyRegistered.push(item)
+        }
+        }
+      }
+      return previouslyRegistered
+
+    }
+    
+  },
+
   async addSanctionedRegistration(data) {
     console.log(data);
     console.log(data.eventId);
