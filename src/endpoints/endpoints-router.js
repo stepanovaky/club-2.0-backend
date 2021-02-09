@@ -12,6 +12,7 @@ const EventsService = require("../services/events-services");
 const DogService = require("../services/dog-service");
 const LogService = require("../services/log-service");
 const OwnerService = require("../services/owner-service");
+const ExcelService = require('../services/excel-service')
 
 registrationRouter
   .route("/api/first/registration")
@@ -57,9 +58,22 @@ eventsRouter
   });
 
   eventsRouter
-  .route('/api/check/event')
+  .route('/api/info/event')
+  .get(async(req, res, next) => {
+
+    console.log(JSON.parse(req.headers['data']))
+
+    const response = await EventsService.getOneEventRegistration(JSON.parse(req.headers['data']).eventId)
+
+    await ExcelService.getEventLog(response);
+    res.sendFile(__dirname + '/excel/' + 'event.xlsx')
+    // res.status(200).json({response})
+     
+  }) 
+
+  eventsRouter
+  .route('/api/check/event') 
   .get( async (req, res, next) => {
-    console.log(req.headers['data'])
     const parsedData = JSON.parse(req.headers['data'])
     console.log(parsedData);
     const response = await EventsService.checkEventRegistration(parsedData.eventId, parsedData)
@@ -117,6 +131,14 @@ logRouter.route("/api/get/all/logs").get(async (req, res, next) => {
   res.status(200).json({ log });
   console.log(log);
 });
+
+logRouter.route('/api/get/all/logs/excel').get(async (req, res, next) => {
+  const log = await LogService.getAllLogs();
+  const response = await ExcelService.getLogExcel(log)
+  console.log('here')
+  res.sendFile(__dirname + "/excel/" + "out.xlsx")
+
+})
 
 module.exports = {
   registrationRouter,

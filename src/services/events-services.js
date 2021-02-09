@@ -16,6 +16,29 @@ const EventsService = {
     const res = await database.updateEvents(serializedData);
   },
 
+  async getOneEventRegistration(id) {
+    console.log(id);
+
+    const event = await database.getOneEvent(id)
+
+    const obj = await database.getEventRegistered(event[0])
+
+    const sanctioned = obj.sanctioned
+
+    for (const dog of sanctioned) {
+      dog.times = await database.getDogTimes(dog.dog.callName);
+      owner = await database.getDogsOwner([{callName: dog.dog.callName}])
+      dog.owner = await database.findOwnerByTheEmail(owner)
+      dog.info = await database.findDogById(dog.dog.callName)
+    }
+
+    return [{sanctioned: sanctioned, unsanctioned: obj.unsanctioned}];
+
+    
+
+
+  },
+
   async checkEventRegistration(eventId, data) {
     
     const event = await database.getOneEvent(eventId)

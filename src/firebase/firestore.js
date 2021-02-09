@@ -134,6 +134,21 @@ const database = {
         });
     }
   },
+
+  async getDogTimes(callName) {
+
+    const times = await dogRef.doc(callName).collection('times').get()
+
+    const dogTimes= []
+
+    times.forEach((doc) => {
+      dogTimes.push(doc.data())
+
+    })
+
+    return dogTimes;
+
+  },
   async getDogsOwner(dogs) {
     const querySnapshot = await dogRef
       .doc(dogs[0].callName)
@@ -230,6 +245,30 @@ const database = {
     })
 
     return registeredDogs
+  },
+
+  async getEventRegistered(eventId) {
+    const unsanctioned = await eventsRef.doc(eventId).collection('unsanctioned').get()
+
+    console.log(unsanctioned);
+
+    const unsanctionedDogs = []
+
+    unsanctioned.forEach((doc) => {
+      unsanctionedDogs.push(doc.data())
+      console.log(doc.data())
+    })
+
+    const sanctioned = await eventsRef.doc(eventId).collection('sanctioned').get()
+
+    const sanctionedDogs = []
+
+    sanctioned.forEach((doc) => {
+      sanctionedDogs.push(doc.data())
+    })
+
+    return ({sanctioned: sanctionedDogs, unsanctioned: unsanctionedDogs})
+
   },
 
   async addSanctionedRegistrationToEvent(id, dogs) {
