@@ -13,14 +13,15 @@ const DogService = require("../services/dog-service");
 const LogService = require("../services/log-service");
 const OwnerService = require("../services/owner-service");
 const ExcelService = require('../services/excel-service')
+const _ = require('lodash')
 
 registrationRouter
   .route("/api/first/registration")
   .post(jsonParser, async (req, res, next) => {
     console.log(req.body.data.dogs, "first time registration endpoint");
     // console.log(req.headers);
-    ValidationServices.validate(req.body.data);
-    FirstTimeRegistrationService.first(req.body.data);
+    await ValidationServices.validate(req.body.data);
+    await FirstTimeRegistrationService.first(req.body.data);
 
     res.status(200).json({ message: "success" });
   });
@@ -29,14 +30,14 @@ registrationRouter
   .route("/api/sanctioned/event/registration")
   .post(jsonParser, async (req, res, next) => {
     // console.log(req.body, "sanctioned registration");
-    EventsService.addSanctionedRegistration(req.body);
+    await EventsService.addSanctionedRegistration(req.body);
   });
 
 registrationRouter
   .route("/api/unsanctioned/event/registration")
   .post(jsonParser, async (req, res, next) => {
     console.log(req.body);
-    EventsService.addUnsanctionedRegistration(req.body);
+    await EventsService.addUnsanctionedRegistration(req.body);
   });
 
 eventsRouter.route("/api/get/events").get(async (req, res, next) => {
@@ -68,19 +69,19 @@ eventsRouter
     await ExcelService.getEventLog(response);
     res.sendFile(__dirname + '/excel/' + 'event.xlsx')
     // res.status(200).json({response})
-     
-  }) 
+    
+  })
 
   eventsRouter
-  .route('/api/check/event') 
+  .route('/api/check/event')
   .get( async (req, res, next) => {
     const parsedData = JSON.parse(req.headers['data'])
     console.log(parsedData);
     const response = await EventsService.checkEventRegistration(parsedData.eventId, parsedData)
-    if (response) {
-      res.status(409).json({response})
+    if (_.isEmpty(response)) {
+      res.status(204).json({ response })
     } else {
-      res.status(204)
+      res.status(409).json({ response })
     }
   })
 
@@ -119,11 +120,11 @@ dogRouter.route("/api/find/dog").get(async (req, res, next) => {
 });
 
 dogRouter.route("/api/update/dog").put(jsonParser, async (req, res, next) => {
-  DogService.updateDog(req.body);
+  await DogService.updateDog(req.body);
 });
 
-dogRouter.route("/api/delete/dog").put(jsonParser, (req, res, enxt) => {
-  DogService.deleteDog(req.body);
+dogRouter.route("/api/delete/dog").put(jsonParser, async (req, res, enxt) => {
+  await DogService.deleteDog(req.body);
 });
 
 logRouter.route("/api/get/all/logs").get(async (req, res, next) => {

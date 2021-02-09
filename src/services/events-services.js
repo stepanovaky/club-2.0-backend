@@ -47,8 +47,9 @@ const EventsService = {
       const toBeRegistered = data.sanctioned
       console.log(info);
       const previouslyRegistered = []
-      for (dog of info) {
-        for (item of toBeRegistered) {
+      
+      for (const dog of info) {
+        for (const item of toBeRegistered) {
           if (item.callName === dog.dog.callName) {
           previouslyRegistered.push(item)
         }
@@ -56,13 +57,12 @@ const EventsService = {
       }
       return previouslyRegistered
     } else if (data.unsanctioned) {
-      const info = database.isEventRegistered(event[0],
-      'unsanctioned', data.unsanctioned)
-       const toBeRegistered = data.unsanctioned
+      const info = database.isEventRegistered(event[0], 'unsanctioned', data.unsanctioned)
+      const toBeRegistered = data.unsanctioned
       console.log(info);
       const previouslyRegistered = []
-      for (dog of info) {
-        for (item of toBeRegistered) {
+      for (const dog of info) {
+        for (const item of toBeRegistered) {
           if (item.callName === dog.dog.callName) {
           previouslyRegistered.push(item)
         }
