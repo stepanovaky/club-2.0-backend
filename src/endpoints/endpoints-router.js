@@ -14,6 +14,7 @@ const LogService = require("../services/log-service");
 const OwnerService = require("../services/owner-service");
 const ExcelService = require('../services/excel-service')
 const _ = require('lodash')
+const path = require('path')
 
 registrationRouter
   .route("/api/first/registration")
@@ -61,15 +62,17 @@ eventsRouter
   eventsRouter
   .route('/api/info/event')
   .get(async(req, res, next) => {
-
-    console.log(JSON.parse(req.headers['data']))
-
-    const response = await EventsService.getOneEventRegistration(JSON.parse(req.headers['data']).eventId)
-
-    await ExcelService.getEventLog(response);
-    res.sendFile(__dirname + '/excel/' + 'event.xlsx')
-    // res.status(200).json({response})
-    
+    const eventId = req.headers?.['data']
+    console.log(eventId)
+  
+    if (eventId) {
+      const response = await EventsService.getOneEventRegistration(JSON.parse(eventId))
+      await ExcelService.getEventLog(response)
+      res.status(200).json({ response })
+    } else {
+      const fileLocation = path.join(__dirname, 'excel', 'event.xlsx')
+      res.download(fileLocation, 'event.xlsx')
+    }
   })
 
   eventsRouter
