@@ -77,9 +77,9 @@ eventsRouter
     const parsedData = JSON.parse(req.headers['data'])
     console.log(parsedData);
     const response = await EventsService.checkEventRegistration(parsedData.eventId, parsedData)
-    if (response) {
+    if (response.length >=1) {
       res.status(409).json({response})
-    } else {
+    } else if (response.length === 0) {
       res.status(204)
     }
   })

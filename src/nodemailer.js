@@ -23,7 +23,7 @@ let transporter = nodemailer.createTransport({
 //     from: 'cfsracingclub@gmail.com',
 //     to: 'psyckalla@gmail.com',
 //     subject: 'Testing and testing',
-//     text: 'it worked!'
+//     text: 'it worked!' 
 // }
 
 const email = new Email({
