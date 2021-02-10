@@ -153,7 +153,9 @@ XlsxPopulate.fromBlankAsync()
     },
     async getEventLog(info) {
       console.log(info, 'excel spreadsheet')
-      const workbook = await XlsxPopulate.fromBlankAsync()
+      XlsxPopulate.fromBlankAsync()
+
+      .then((workbook) => {
 
       workbook.sheet("Sheet1").cell("A1").value("Call Name");
       workbook.sheet("Sheet1").cell("B1").value("Registered Name");
@@ -213,6 +215,7 @@ XlsxPopulate.fromBlankAsync()
                   .value(dog.owner.fullName)
                   index++
               })
+          })
           })
 
      
