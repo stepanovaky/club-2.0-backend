@@ -172,9 +172,10 @@ XlsxPopulate.fromBlankAsync()
           info.map((item) => {
               console.log(item)
               console.log(item.sanctioned.length);
-              item.times[0]
+             
 
               item.sanctioned.map((dog,i) => {
+                console.log(dog.times);
                 console.log(dog);
                   workbook.sheet("Sheet1")
                   .cell(`A${index}`)
@@ -184,13 +185,13 @@ XlsxPopulate.fromBlankAsync()
                   .value(dog.info.dog.registeredName)
                   workbook.sheet("Sheet1")
                   .cell(`C${index}`)
-                  .value(dog.times[0].date)
+                  .value(dog.times[0]?.times.date)
                   workbook.sheet("Sheet1")
                   .cell(`D${index}`)
-                  .value(dog.times[0].weight)
+                  .value(dog.times[0]?.times.weight)
                   workbook.sheet("Sheet1")
                   .cell(`E${index}`)
-                  .value(dog.times[0].time)
+                  .value(dog.times[0]?.times.time)
                   workbook.sheet("Sheet1")
                   .cell(`F${index}`)
                   .value(dog.owner.fullName)
