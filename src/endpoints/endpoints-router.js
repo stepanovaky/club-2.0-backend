@@ -80,9 +80,9 @@ eventsRouter
   .get( async (req, res, next) => {
     const parsedData = JSON.parse(req.headers['data'])
     console.log(parsedData);
-    const response = await EventsService.checkEventRegistration(parsedData.eventId, parsedData)
-
-    console.log(response);
+    const response = await EventsService.checkEventRegistration(parsedData.eventId, [parsedData])
+ 
+    console.log(response); 
 
     if (_.isEmpty(response)) {
       res.status(204).json({ response })

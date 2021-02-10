@@ -35,7 +35,7 @@ const EventsService = {
   },
 
   async checkEventRegistration(eventId, data) {
-
+    console.log(data);
     for (const item of data) {
     const event = await database.getOneEvent(eventId)
     if (item.sanctioned) {
@@ -55,12 +55,13 @@ const EventsService = {
     } else if (item.unsanctioned) {
       console.log('item unsanctioned')
       const info = await database.isEventRegistered(event[0], 'unsanctioned', data.unsanctioned)
-      const toBeRegistered = data.unsanctioned
-      console.log(info);
+      const toBeRegistered = [data.unsanctioned]
+      console.log(info, 'previously registered info');
       const previouslyRegistered = []
       for (const dog of info) {
         for (const item of toBeRegistered) {
-          if (item.callName === dog.callName) {
+          console.log(item, 'item callname')
+          if (item?.callName === dog.callName) {
           previouslyRegistered.push(item)
         }
         }

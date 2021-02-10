@@ -1,4 +1,3 @@
-const OwnerService = require("../services/owner-service");
 const db = require("./firebase");
 const { nanoid } = require("nanoid");
 
@@ -38,7 +37,7 @@ const database = {
   },
   async addDog(owner, dogs) {
     await dogs.map((dog) => {
-      const res = dogRef.doc(dog.callName).set(dog);
+     dogRef.doc(dog.callName).set(dog);
       const resOwner = dogRef
         .doc(dog.callName)
         .collection("owners")
@@ -108,7 +107,7 @@ const database = {
       console.log(owner, "fetchowner owner");
       // obj.owner = owner;
     });
-    const wait = await obj.owner;
+    await obj.owner;
     return obj;
   },
   async updateDog(data) {
@@ -205,7 +204,7 @@ const database = {
   async updateEvents(data) {
     console.log(data, "database");
     console.log(data.eventId, "database event id");
-    const item = await eventsRef
+     await eventsRef
       .where("eventId", "==", data.eventId)
       .get()
       .then(function (querySnapshot) {
