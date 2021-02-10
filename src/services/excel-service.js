@@ -172,6 +172,7 @@ XlsxPopulate.fromBlankAsync()
           info.map((item) => {
               console.log(item)
               console.log(item.sanctioned.length);
+              item.times[0]
 
               item.sanctioned.map((dog,i) => {
                 console.log(dog);
@@ -215,7 +216,10 @@ XlsxPopulate.fromBlankAsync()
                   .value(dog.owner.fullName)
                   index++
               })
+
+              
           })
+          return workbook.toFileAsync("./src/endpoints/excel/event.xlsx")
           })
 
      
