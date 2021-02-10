@@ -82,6 +82,8 @@ eventsRouter
     console.log(parsedData);
     const response = await EventsService.checkEventRegistration(parsedData.eventId, parsedData)
 
+    console.log(response);
+
     if (_.isEmpty(response)) {
       res.status(204).json({ response })
     } else {

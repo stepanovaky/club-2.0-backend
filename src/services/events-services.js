@@ -52,7 +52,7 @@ const EventsService = {
       }
       return previouslyRegistered
     } else if (data.unsanctioned) {
-      const info = database.isEventRegistered(event[0], 'unsanctioned', data.unsanctioned)
+      const info = await database.isEventRegistered(event[0], 'unsanctioned', data.unsanctioned)
       const toBeRegistered = data.unsanctioned
       console.log(info);
       const previouslyRegistered = []
@@ -78,7 +78,7 @@ const EventsService = {
     
     await EmailService.sanctionedEventRegistration(
       event[1],
-      data.addedDogs,
+      data.addedDogs, 
       event[2],
       owner
     );
