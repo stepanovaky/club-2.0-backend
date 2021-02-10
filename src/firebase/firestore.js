@@ -114,12 +114,12 @@ const database = {
   async updateDog(data) {
     console.log(data);
     const dog = data.data;
-    dogRef.doc(data.data.callName).update({
+    await dogRef.doc(data.data.callName).update({
       dog,
     });
 
     if (data.data.date) {
-      dogRef
+      await dogRef
         .doc(data.data.callName)
         .collection("times")
         .doc(data.data.date)
@@ -189,7 +189,7 @@ const database = {
         eventName: data.eventName,
         startDate: data.startDate,
       });
-  },   
+  },
 
   
 

@@ -20,23 +20,18 @@ const EventsService = {
     console.log(id);
 
     const event = await database.getOneEvent(id)
-
-    const obj = await database.getEventRegistered(event[0])
+    const obj   = await database.getEventRegistered(event[0])
 
     const sanctioned = obj.sanctioned
 
     for (const dog of sanctioned) {
-      dog.times = await database.getDogTimes(dog.dog.callName);
-      owner = await database.getDogsOwner([{callName: dog.dog.callName}])
+      dog.times = await database.getDogTimes(dog.callName);
+      const owner = await database.getDogsOwner([{callName: dog.callName}])
       dog.owner = await database.findOwnerByTheEmail(owner)
-      dog.info = await database.findDogById(dog.dog.callName)
+      dog.info = await database.findDogById(dog.callName)
     }
 
-    return [{sanctioned: sanctioned, unsanctioned: obj.unsanctioned}];
-
-    
-
-
+    return [{ sanctioned, unsanctioned: obj.unsanctioned }];
   },
 
   async checkEventRegistration(eventId, data) {
@@ -47,23 +42,23 @@ const EventsService = {
       const toBeRegistered = data.sanctioned
       console.log(info);
       const previouslyRegistered = []
-      for (dog of info) {
-        for (item of toBeRegistered) {
-          if (item.callName === dog.dog.callName) {
+      
+      for (const dog of info) {
+        for (const item of toBeRegistered) {
+          if (item.callName === dog.callName) {
           previouslyRegistered.push(item)
         }
         }
       }
       return previouslyRegistered
     } else if (data.unsanctioned) {
-      const info = database.isEventRegistered(event[0],
-      'unsanctioned', data.unsanctioned)
-       const toBeRegistered = data.unsanctioned
+      const info = database.isEventRegistered(event[0], 'unsanctioned', data.unsanctioned)
+      const toBeRegistered = data.unsanctioned
       console.log(info);
       const previouslyRegistered = []
-      for (dog of info) {
-        for (item of toBeRegistered) {
-          if (item.callName === dog.dog.callName) {
+      for (const dog of info) {
+        for (const item of toBeRegistered) {
+          if (item.callName === dog.callName) {
           previouslyRegistered.push(item)
         }
         }
@@ -79,29 +74,29 @@ const EventsService = {
     console.log(data.eventId);
     const event = await database.getOneEvent(data.eventId);
     const owner = await database.getDogsOwner(data.addedDogs);
-    database.logEvent(owner, data.addedDogs, "Sanctioned Registration");
+    await database.logEvent(owner, data.addedDogs, "Sanctioned Registration");
     
-    EmailService.sanctionedEventRegistration(
+    await EmailService.sanctionedEventRegistration(
       event[1],
       data.addedDogs,
       event[2],
       owner
     );
-    database.addSanctionedRegistrationToEvent(event[0], data.addedDogs);
+    await database.addSanctionedRegistrationToEvent(event[0], data.addedDogs);
   },
   async addUnsanctionedRegistration(data) {
     console.log(data);
     console.log(data.eventId);
     const event = await database.getOneEvent(data.eventId);
-    database.logEvent(data.owners[0], data.dogs, "Unsanctioned Registration");
+    await database.logEvent(data.owners[0], data.dogs, "Unsanctioned Registration");
     
-    EmailService.unsanctionedEventRegistration(
+    await EmailService.unsanctionedEventRegistration(
       event[1],
       data.dogs,
       event[2],
       data.owners[0].email
     );
-    database.addUnsanctionedRegistrationToEvent(
+    await database.addUnsanctionedRegistrationToEvent(
       event[0],
       data.owners,
       data.dogs

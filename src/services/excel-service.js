@@ -2,10 +2,7 @@ const XlsxPopulate = require("xlsx-populate");
 const database = require('../firebase/firestore');
 const { format } = require('date-fns')
 
-
 const ExcelService = {
-
-    
 
     async getLogExcel(logsList) {
 
@@ -15,7 +12,7 @@ console.log(logsList)
         let response = false;
 
 XlsxPopulate.fromBlankAsync()
-
+// TODO: fix race conditions
     .then((workbook) => {
       workbook.sheet("Sheet1").cell("A1").value("Transaction Type");
       workbook.sheet("Sheet1").cell("B1").value("Transaction Date and Time");
@@ -152,15 +149,12 @@ XlsxPopulate.fromBlankAsync()
     //   res.sendFile(__dirname + "/endpoints/excel/" + "out.xlsx");
     });
     return response
+    
     },
     async getEventLog(info) {
+      console.log(info, 'excel spreadsheet')
+      const workbook = await XlsxPopulate.fromBlankAsync()
 
-        console.log(info, 'excel spreadsheet')
-
-        XlsxPopulate.fromBlankAsync()
-
-    .then((workbook) => {
-      
       workbook.sheet("Sheet1").cell("A1").value("Call Name");
       workbook.sheet("Sheet1").cell("B1").value("Registered Name");
       workbook.sheet("Sheet1").cell("C1").value("Date");
@@ -182,7 +176,7 @@ XlsxPopulate.fromBlankAsync()
                   console.log(dog);
                   workbook.sheet("Sheet1")
                   .cell(`A${index}`)
-                  .value(dog.dog.callName)
+                  .value(dog.callName)
                   workbook.sheet("Sheet1")
                   .cell(`B${index}`)
                   .value(dog.info.registeredName)
@@ -200,35 +194,29 @@ XlsxPopulate.fromBlankAsync()
                   .value(dog.owner.fullName)
                   workbook.sheet("Sheet1")
                   .cell(`G${index}`)
-                  .value(dog.info.registrationStatus) 
+                  .value(dog.info.registrationStatus)
 
                   index++
               })
-              index + item.sanctioned.length
+            
+              // index + item.sanctioned.length
 
-              item.unsanctioned.map((dog, i) => {
+              item?.unsanctioned?.map((dog, i) => {
                   workbook.sheet("Sheet1")
                   .cell(`A${index}`)
-                  .value(dog.dog.callName)
+                  .value(dog.callName)
                   workbook.sheet("Sheet1")
                   .cell(`B${index}`)
-                  .value(dog.dog.registeredName)
+                  .value(dog.registeredName)
                  
                   workbook.sheet("Sheet1")
                   .cell(`F${index}`)
                   .value(dog.owner.fullName)
                   index++
-
               })
           })
 
-      return workbook.toFileAsync("./src/endpoints/excel/event.xlsx");
-    })
-    .then(() => {
-      response = true;
-      
-    //   res.sendFile(__dirname + "/endpoints/excel/" + "out.xlsx");
-    });
+     
     }
 }
 
