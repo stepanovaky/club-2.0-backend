@@ -35,9 +35,10 @@ const EventsService = {
   },
 
   async checkEventRegistration(eventId, data) {
-    
+
+    for (const item of data) {
     const event = await database.getOneEvent(eventId)
-    if (data.sanctioned) {
+    if (item.sanctioned) {
       const info = await database.isEventRegistered(event[0], 'sanctioned', data.sanctioned)
       const toBeRegistered = data.sanctioned
       console.log(info);
@@ -51,7 +52,8 @@ const EventsService = {
         }
       }
       return previouslyRegistered
-    } else if (data.unsanctioned) {
+    } else if (item.unsanctioned) {
+      console.log('item unsanctioned')
       const info = await database.isEventRegistered(event[0], 'unsanctioned', data.unsanctioned)
       const toBeRegistered = data.unsanctioned
       console.log(info);
@@ -66,6 +68,12 @@ const EventsService = {
       return previouslyRegistered
 
     }
+
+
+
+    }
+    
+
     
   },
 

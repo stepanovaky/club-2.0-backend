@@ -152,6 +152,7 @@ XlsxPopulate.fromBlankAsync()
     
     },
     async getEventLog(info) {
+      
       console.log(info, 'excel spreadsheet')
       XlsxPopulate.fromBlankAsync()
 
@@ -159,11 +160,13 @@ XlsxPopulate.fromBlankAsync()
 
       workbook.sheet("Sheet1").cell("A1").value("Call Name");
       workbook.sheet("Sheet1").cell("B1").value("Registered Name");
-      workbook.sheet("Sheet1").cell("C1").value("Date");
-      workbook.sheet("Sheet1").cell("D1").value("Weight");
-      workbook.sheet("Sheet1").cell("E1").value("Time");
-      workbook.sheet("Sheet1").cell("F1").value("Owner");
-      workbook.sheet("Sheet1").cell("G1").value("Sanction Registration Status");
+      workbook.sheet("Sheet1").cell("C1").value("Breed");
+      workbook.sheet("Sheet1").cell("D1").value("Gender");
+      workbook.sheet("Sheet1").cell("E1").value("Date");
+      workbook.sheet("Sheet1").cell("F1").value("Weight");
+      workbook.sheet("Sheet1").cell("G1").value("Time");
+      workbook.sheet("Sheet1").cell("H1").value("Owner");
+      workbook.sheet("Sheet1").cell("I1").value("Sanction Registration Status");
     
       let index = 2;
      
@@ -175,7 +178,7 @@ XlsxPopulate.fromBlankAsync()
              
 
               item.sanctioned.map((dog,i) => {
-                console.log(dog.times);
+                console.log(dog.times[0]?.times[0], 'times object');
                 console.log(dog);
                   workbook.sheet("Sheet1")
                   .cell(`A${index}`)
@@ -183,20 +186,28 @@ XlsxPopulate.fromBlankAsync()
                   workbook.sheet("Sheet1")
                   .cell(`B${index}`)
                   .value(dog.info.dog.registeredName)
+                  
                   workbook.sheet("Sheet1")
                   .cell(`C${index}`)
-                  .value(dog.times[0]?.times.date)
+                  .value(dog.info.dog.breed)
                   workbook.sheet("Sheet1")
                   .cell(`D${index}`)
-                  .value(dog.times[0]?.times.weight)
+                  .value(dog.info.dog.gender)
+
                   workbook.sheet("Sheet1")
                   .cell(`E${index}`)
-                  .value(dog.times[0]?.times.time)
+                  .value(dog.times[0]?.times[0]?.date)
                   workbook.sheet("Sheet1")
                   .cell(`F${index}`)
-                  .value(dog.owner.fullName)
+                  .value(dog.times[0]?.times[0]?.weight)
                   workbook.sheet("Sheet1")
                   .cell(`G${index}`)
+                  .value(dog.times[0]?.times[0]?.time)
+                  workbook.sheet("Sheet1")
+                  .cell(`H${index}`)
+                  .value(dog.owner.fullName)
+                  workbook.sheet("Sheet1")
+                  .cell(`I${index}`)
                   .value(dog.info.dog.registrationStatus)
 
                   index++
@@ -205,16 +216,24 @@ XlsxPopulate.fromBlankAsync()
               // index + item.sanctioned.length
 
               item?.unsanctioned?.map((dog, i) => {
+                console.log(dog.dog, 'unsanctioned')
+                console.log(index);
                   workbook.sheet("Sheet1")
                   .cell(`A${index}`)
-                  .value(dog.callName)
+                  .value(dog.dog.callName)
                   workbook.sheet("Sheet1")
                   .cell(`B${index}`)
-                  .value(dog.registeredName)
+                  .value(dog.dog.registeredName)
+                   workbook.sheet("Sheet1")
+                  .cell(`C${index}`)
+                  .value(dog.dog.breed)
+                  workbook.sheet("Sheet1")
+                  .cell(`D${index}`)
+                  .value(dog.dog.gender)
                  
                   workbook.sheet("Sheet1")
-                  .cell(`F${index}`)
-                  .value(dog.owner.fullName)
+                  .cell(`H${index}`)
+                  .value(dog.owner.firstName + ' ' + dog.owner.lastName)
                   index++
               })
 
