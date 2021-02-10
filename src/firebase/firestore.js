@@ -274,7 +274,7 @@ const database = {
   async addSanctionedRegistrationToEvent(id, dogs) {
     dogs.map((dog) => {
       eventsRef.doc(id).collection("sanctioned").doc(dog.callName).set({
-        dog,
+        callName: dog.callName, sanctionId: dog.sanctionId
       });
     });
   },
